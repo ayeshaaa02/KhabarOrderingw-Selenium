@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                setTimeout(function() {
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                }, 100);
+            }, 10);
+        };
+    </script>
+
+    <div class="container">
+        <header>
+            <h1>Khabar Ordering/h1>
+        </header>
+
+        <div class="login-box">
+            <h2>User Login</h2>
+            <div id="message" class="message"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required 
+                           placeholder="Enter username" 
+                           data-selenium-id="username-input"
+                           autocomplete="off">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required 
+                           placeholder="Enter password" 
+                           data-selenium-id="password-input"
+                           autocomplete="off">
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" 
+                            data-selenium-id="login-button">Login</button>
+                </div>
+            </form>
+            
+            <div class="links">
+                <p>New user? <a href="register.html" data-selenium-id="register-link">Register here</a></p>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        });
+
+        if (localStorage.getItem('loggedIn') === 'true') {
+            const userRole = localStorage.getItem('userRole');
+            if (userRole === 'admin') {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const message = document.getElementById('message');
+            
+            const hardcodedUsers = {
+                'admin': {password: 'admin123', role: 'admin', name: 'Admin User'},
+                'customer': {password: 'customer123', role: 'customer', name: 'Ayesha Khatun'},
+                'user1': {password: 'pass123', role: 'customer', name: 'Test User'}
+            };
+            
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
+            
+            let authenticatedUser = null;
+            
+            if (hardcodedUsers[username] && hardcodedUsers[username].password === password) {
+                authenticatedUser = hardcodedUsers[username];
+            }
+            else if (registeredUsers[username] && registeredUsers[username].password === password) {
+                authenticatedUser = registeredUsers[username];
+            }
+            
+            if (authenticatedUser) {
+                localStorage.setItem('loggedIn', 'true');
+                localStorage.setItem('username', username);
+                localStorage.setItem('userRole', authenticatedUser.role);
+                localStorage.setItem('userName', authenticatedUser.name || username);
+                
+                message.textContent = 'Login successful!';
+                message.className = 'message success';
+                
+                setTimeout(() => {
+                    if (authenticatedUser.role === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 1000);
+            } else {
+                message.textContent = 'Invalid username or password!';
+                message.className = 'message error';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Khabar Ordering</h1>
+            <p>Create a new account</p>
+        </header>
+
+        <div class="login-box">
+            <h2>User Registration</h2>
+            <div id="message" class="message"></div>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regName">Full Name:</label>
+                    <input type="text" id="regName" name="regName" required 
+                           placeholder="Enter your full name"
+                           data-selenium-id="name-input">
+                </div>
+                
+                <div class="form-group">
+                    <label for="regUsername">Username:</label>
+                    <input type="text" id="regUsername" name="regUsername" required 
+                           placeholder="Choose a username"
+                           data-selenium-id="reg-username-input">
+                </div>
+                
+                <div class="form-group">
+                    <label for="regPassword">Password:</label>
+                    <input type="password" id="regPassword" name="regPassword" required 
+                           placeholder="Choose a password"
+                           data-selenium-id="reg-password-input">
+                </div>
+                
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirm Password:</label>
+                    <input type="password" id="regConfirmPassword" required 
+                           placeholder="Confirm your password"
+                           data-selenium-id="confirm-password-input">
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" 
+                            data-selenium-id="register-button">Register</button>
+                    <button type="button" class="btn" onclick="window.location.href='index.html'">Back to Login</button>
+                </div>
+            </form>
+            
+            <div class="links">
+                <p>Already have an account? <a href="index.html">Login here</a></p>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('regName').value;
+    const username = document.getElementById('regUsername').value;
+    const password = document.getElementById('regPassword').value;
+    const confirmPassword = document.getElementById('regConfirmPassword').value;
+    const message = document.getElementById('message');
+    
+    if (password !== confirmPassword) {
+        message.textContent = 'Passwords do not match!';
+        message.className = 'message error';
+        return;
+    }
+    
+    if (password.length < 6) {
+        message.textContent = 'Password must be at least 6 characters!';
+        message.className = 'message error';
+        return;
+    }
+    
+    const hardcodedUsers = ['admin', 'customer', 'user1'];
+    if (hardcodedUsers.includes(username.toLowerCase())) {
+        message.textContent = 'This username is reserved! Please choose another.';
+        message.className = 'message error';
+        return;
+    }
+    
+    const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
+    
+    if (existingUsers[username]) {
+        message.textContent = 'Username already exists!';
+        message.className = 'message error';
+        return;
+    }
+    existingUsers[username] = {
+        name: name,
+        password: password,
+        role: 'customer',
+        email: ''
+    };
+    
+    localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
+    
+    message.textContent = `Registration successful! You can now login as "${username}"`;
+    message.className = 'message success';
+    
+    setTimeout(() => {
+        window.location.href = `index.html?username=${encodeURIComponent(username)}`;
+    }, 2000);
+});
+    </script>
+</body>
+</html>

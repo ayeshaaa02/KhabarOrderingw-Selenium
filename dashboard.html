@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Khabar Ordering</h1>
+            <div class="user-info">
+                Welcome, <span id="userName">Customer</span> | 
+                <a href="index.html" onclick="logout()" data-selenium-id="logout-link">Logout</a>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="#orders">My Orders</a></li>
+                <li><a href="#profile">Profile</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <div class="welcome-section">
+                <h2>Customer Dashboard</h2>
+                <p>Welcome to your food ordering dashboard!</p>
+            </div>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>Order Food</h3>
+                    <p>Browse our menu and place an order</p>
+                    <br>
+                    <button class="btn" data-selenium-id="order-button">View Menu</button>
+                </div>
+                
+                <div class="card">
+                    <h3>Order History</h3>
+                    <p>View your previous orders</p>
+                    <br>
+                    <button class="btn" data-selenium-id="history-button">View History</button>
+                </div>
+                
+                <div class="card">
+                    <h3>My Profile</h3>
+                    <p>Update your personal information</p>
+                    <br>
+                    <button class="btn" data-selenium-id="profile-button">Edit Profile</button>
+                </div>
+            </div>
+
+            <div class="order-section">
+                <h3>Recent Orders</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Food Item</th>
+                            <th>Price (Tk.)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1001</td>
+                            <td>Cheese Pizza</td>
+                            <td>250</td>
+                            <td><span class="status delivered">Delivered</span></td>
+                        </tr>
+                        <tr>
+                            <td>#1002</td>
+                            <td>Burger Combo</td>
+                            <td>300</td>
+                            <td><span class="status pending">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        if (localStorage.getItem('loggedIn') !== 'true') {
+            window.location.href = 'index.html';
+        }
+        
+        document.getElementById('userName').textContent = localStorage.getItem('userName') || 'Customer';
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

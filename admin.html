@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Admin Panel</h1>
+            <div class="user-info">
+                Welcome, <strong>Admin</strong> | 
+                <a href="index.html" onclick="logout()" data-selenium-id="admin-logout">Logout</a>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="admin.html" class="active">Dashboard</a></li>
+                <li><a href="#users">Manage Users</a></li>
+                <li><a href="#food">Food Items</a></li>
+                <li><a href="#orders">All Orders</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <h2>Admin Dashboard</h2>
+            <p>Manage your food ordering system</p>
+
+            <div class="admin-section" data-selenium-id="remove-user-section">
+                <h3>Manage Users</h3>
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>customer</td>
+                            <td>Ayesha Khatun</td>
+                            <td>Customer</td>
+                            <td>
+                                <button class="btn btn-danger" onclick="removeUser('customer')" 
+                                        data-selenium-id="remove-user-button">Remove</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>user1</td>
+                            <td>Test User</td>
+                            <td>Customer</td>
+                            <td>
+                                <button class="btn btn-danger" onclick="removeUser('user1')">Remove</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="removeMessage" class="message"></div>
+            </div>
+
+            <div class="admin-section" data-selenium-id="update-price-section">
+                <h3>Update Food Prices</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Food Item</th>
+                            <th>Current Price (Tk.)</th>
+                            <th>New Price (Tk.)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cheese Pizza</td>
+                            <td><span id="pizzaPrice">250</span></td>
+                            <td>
+                                <input type="number" id="newPizzaPrice" min="1" max="50" step="0.01" 
+                                       value="250" data-selenium-id="price-input">
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" onclick="updatePrice('pizza')"
+                                        data-selenium-id="update-price-button">Update</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Burger Combo</td>
+                            <td><span id="burgerPrice">300</span></td>
+                            <td>
+                                <input type="number" id="newBurgerPrice" min="1" max="50" step="0.01" 
+                                       value="300">
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" onclick="updatePrice('burger')">Update</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="priceMessage" class="message"></div>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        if (localStorage.getItem('loggedIn') !== 'true' || localStorage.getItem('userRole') !== 'admin') {
+            window.location.href = 'index.html';
+        }
+        
+        function removeUser(username) {
+            const message = document.getElementById('removeMessage');
+            message.textContent = `User "${username}" has been removed successfully!`;
+            message.className = 'message success';
+            
+            setTimeout(() => {
+                message.textContent = '';
+                const rows = document.querySelectorAll('#usersTable tbody tr');
+                rows.forEach(row => {
+                    if (row.cells[0].textContent === username) {
+                        row.remove();
+                    }
+                });
+            }, 1500);
+        }
+        
+        function updatePrice(item) {
+            const priceInput = document.getElementById(`new${item.charAt(0).toUpperCase() + item.slice(1)}Price`);
+            const priceDisplay = document.getElementById(`${item}Price`);
+            const message = document.getElementById('priceMessage');
+            
+            const newPrice = parseFloat(priceInput.value).toFixed(2);
+            priceDisplay.textContent = newPrice;
+            
+            message.textContent = `${item.charAt(0).toUpperCase() + item.slice(1)} price updated to ${newPrice} Tk.!`;
+            message.className = 'message success';
+            
+            setTimeout(() => {
+                message.textContent = '';
+            }, 2000);
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
